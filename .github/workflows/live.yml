@@ -1,0 +1,32 @@
+name: YouTube Live Stream
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'Direct MP4 Video URL'
+        required: true
+        type: string
+      rtmp_url:
+        description: 'YouTube RTMP URL with Stream Key'
+        required: true
+        type: string
+
+jobs:
+  live-stream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Start Streaming to YouTube
+        run: |
+          echo "Downloading video and starting live stream..."
+          # FFmpeg command to loop the video and stream to YouTube via RTMP
+          ffmpeg -re -stream_loop -1 -i "${{ github.event.inputs.video_url }}" \
+          -c:v libx264 -preset veryfast -maxrate 3000k -bufsize 6000k -pix_fmt yuv420p -g 50 \
+          -c:a aac -b:a 128k -ar 44100 \
+          -f flv "${{ github.event.inputs.rtmp_url }}"
