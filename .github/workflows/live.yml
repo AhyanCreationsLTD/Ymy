@@ -1,1 +1,48 @@
+name: YouTube Live Bot & Stream
 
+on:
+  workflow_dispatch:
+    inputs:
+      action_type:
+        description: 'Action Type (bot or stream)'
+        required: false
+        default: 'bot'
+      video_url:
+        description: 'Direct MP4 Video URL'
+        required: false
+        type: string
+      rtmp_url:
+        description: 'YouTube RTMP URL with Stream Key'
+        required: false
+        type: string
+  schedule:
+    # প্রতি ৫ ঘণ্টা পরপর অ্যাকশনটি নিজে নিজে রিস্টার্ট হবে (যাতে ৬ ঘণ্টার লিমি트 পার না হয়)
+    - cron: '0 */5 * * *'
+
+jobs:
+  run-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install python-telegram-bot requests
+
+      - name: Run Telegram Bot (Background)
+        env:
+          TELEGRAM_TOKEN: "8907004985:AAE7Hqyob8VHwk2o4oQg81HiF2hA7TQtVIs"
+          GITHUB_TOKEN: "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"
+          GITHUB_OWNER: "AhyanCreationsLTD"
+          GITHUB_REPO: "Ymy"
+        run: |
+          python live.py &
+          # অ্যাকশনটিকে একটানা চালু রাখতে এবং ৬ ঘণ্টা পর কাটার আগে চলতে দেওয়ার জন্য
+          sleep 20000
