@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 
 # গিটহাব এবং বটের কনফিগারেশন (এগুলো এনভায়রনমেন্ট ভেরিয়েবলে বা ইউজারের সেটিংসে থাকবে)
-GITHUB_TOKEN = "YOUR_GITHUB_PAT"
+GITHUB_TOKEN = "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"
 GITHUB_OWNER = "AhyanCreationsLTD"
 GITHUB_REPO = "Ymy"
 WORKFLOW_FILE = "live.yml"
